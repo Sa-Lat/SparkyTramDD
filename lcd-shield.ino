@@ -522,45 +522,28 @@ void setup() {
   lcd->clear();
   lcd->setCursor(0, 0);
   lcd->begin(16, 2);
+  
+  RGB.control(true);
+  RGB.brightness(15);
+  RGB.color(242,255,0);
 }
 
 void loop() {
-    lcd->clear();
     readTramData();
-    delay(30000);
 }
 
 void readTramData() {
-    lcd->setCursor(0, 0);
     char * host = "mc-schoenebeck.flexitarian-blog.de";
-    String path = "/abfahrtsplan.php?i=0";
-  
-    char * response = http_get(host, path);
-    lcd->clear();
-    lcd->print(response);
+    String path = "/abfahrtsplan.php?i=";
     
-    delay(2000);
-    
-    path = "/abfahrtsplan.php?i=1";
-    
-    lcd->setCursor(0, 1);
-    response = http_get(host, path);
-    lcd->print(response);
-    
-    delay(2000);
-    
-    path = "/abfahrtsplan.php?i=2";
-    
-    lcd->setCursor(0, 0);
-    response = http_get(host, path);
-    lcd->print(response);
-    
-    delay(2000);
-    
-    path = "/abfahrtsplan.php?i=3";
-    
-    lcd->setCursor(0, 1);
-    response = http_get(host, path);
-    lcd->print(response);
-
+    for (int i = 0; i <= 5; i++){
+        int lineNum = i % 2;
+        lcd->setCursor(0, lineNum);
+        
+        char * response = http_get(host, path + i);
+       
+        lcd->print(response);
+        
+        delay(1000);
+   } 
 }
